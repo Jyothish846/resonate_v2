@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Search Musicians - Resonate{% endblock %}
+
+{% block content %}
+
+<div class="search-container main-container">
+
+    <h2 class="page-title">Find Your Collaborators</h2>
+    <p class="page-subtitle">Search for musicians by username, instrument, or what they write in their bio.</p>
+
+<div class="search-form-group">
+    <form method="GET" action="{% url 'accounts:search_musicians' %}" class="search-form">
+        
+        
+        <div class="search-input-wrapper">
+            <input type="text" name="q" placeholder="Search by username, instrument, or bio..." 
+                   value="{{ query|default_if_none:'' }}" 
+                   class="search-input">
+            
+            <button type="submit" class="btn btn-primary search-button-inside">
+                Search
+            </button>
+        </div>
+        
+        
+    </form>
+</div>
+
+    <div class="results-wrapper">
+        {% if results %}
+            <h3 class="results-count">Found {{ results|length }} result{{ results|length|pluralize }}</h3>
+            {% for profile in results %}
+            <a href="{% url 'accounts:profile_with_username' profile.user.username %}" class="search-result-card">
+                {% if profile.avatar %}
+                    <img src="{{ profile.avatar.url }}" alt="{{ profile.user.username }} avatar" class="result-avatar">
+                {% else %}
+                    <img src="{% static 'accounts/default-profile.png' %}" alt="Default avatar" class="result-avatar">
+                {% endif %}
+                <div class="result-info">
+                    <h4 class="result-username">{{ profile.user.username }}</h4>
+                    <p class="result-instrument">{{ profile.instrument|default_if_none:"Musician" }}</p>
+                    <p class="result-location">{{ profile.location|default_if_none:"" }}</p>
+                </div>
+            </a>
+            {% endfor %}
+        {% elif query %}
+             <p class="no-results">No musicians found matching **"{{ query }}"**. Try a different search term.</p>
+        {% else %}
+            <p class="no-results">Enter a search term above to find other musicians on Resonate.</p>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock %}

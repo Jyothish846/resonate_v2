@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Delete Post - Resonate{% endblock %}
+
+{% block content %}
+
+<div class="post-delete-container form-container main-container">
+    
+    <div class="card delete-card">
+        <h2 class="page-title danger-title">Delete Post Permanently</h2>
+
+        <p class="warning-text">
+            **Are you absolutely sure you want to delete the post titled "<strong>{{ post.title }}</strong>"?** This action cannot be undone.
+        </p>
+
+        {% if post.image %}
+        <div class="post-image-preview-wrapper">
+            <img src="{{ post.image.url }}" alt="Post Image" class="post-delete-image">
+        </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-buttons form-actions">
+                <button type="submit" class="btn btn-danger">Yes, Delete Post</button>
+                <a href="{% url 'accounts:view_post' post.id %}" class="btn btn-secondary cancel-btn">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

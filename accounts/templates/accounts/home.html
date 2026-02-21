@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Home - Resonate{% endblock %}
+
+{% block content %}
+
+<div class="home-container form-container main-container">
+
+    <div class="welcome-card">
+        <h2 class="page-title">Welcome to Resonate 🎶</h2>
+        <p class="page-subtitle">Your hub for connecting with musicians and sharing your latest creations.</p>
+
+        <p class="welcome-text">
+            **Ready to get started?**
+        </p>
+
+        <div class="form-buttons home-actions">
+            <a href="{% url 'accounts:feed' %}" class="btn btn-primary">Go to Feed</a>
+            
+            <a href="{% url 'accounts:search_musicians' %}" class="btn btn-secondary">Find Musicians</a>
+        </div>
+        
+        <p class="home-footer-note">
+            *If you're new, check out the Feed to see the latest community posts!
+        </p>
+    </div>
+
+</div>
+
+{% endblock %}

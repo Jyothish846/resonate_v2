@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ post.title }} - Resonate{% endblock %}
+
+{% block content %}
+
+<div class="post-detail-container main-container">
+    
+    <div class="card post-card">
+        
+        <div class="post-header">
+            
+            {% if post.author_id %}
+                <a href="{% url 'accounts:profile_with_username' post.author.username %}" class="post-avatar-link">
+                    {% if post.author.profile.avatar %}
+                        <img src="{{ post.author.profile.avatar.url }}" alt="{{ post.author.username }}'s avatar" class="post-avatar">
+                    {% else %}
+                        <img src="{% static 'accounts/default-profile.png' %}" alt="Default avatar" class="post-avatar">
+                    {% endif %}
+                </a>
+                <div class="post-meta">
+                    <a href="{% url 'accounts:profile_with_username' post.author.username %}" class="post-username">{{ post.author.username }}</a>
+                    <span class="post-timestamp">{{ post.created_at|timesince }} ago</span>
+                </div>
+            {% else %}
+                <img src="{% static 'accounts/default-profile.png' %}" alt="Deleted User" class="post-avatar">
+                <div class="post-meta">
+                    <span class="post-username deleted-user-text">Deleted User</span>
+                    <span class="post-timestamp">{{ post.created_at|timesince }} ago</span>
+                </div>
+            {% endif %}
+            
+            
+            {% if post.author_id and request.user.id == post.author_id %}
+                <div class="post-options">
+                    
+                    <a href="{% url 'accounts:delete_post' post.id %}" class="btn btn-sm btn-danger">Delete</a>
+                </div>
+            {% endif %}
+        </div>
+
+        <h1 class="page-title">{{ post.title }}</h1>
+        
+        {% if post.image %}
+            <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-image">
+        {% endif %}
+
+        <p class="post-caption">{{ post.description }}</p>
+
+        <div class="post-actions post-likes-detail">
+            <a href="{% url 'accounts:like_toggle' post.id %}" 
+               class="like-btn {% if is_liked_by_user %}liked{% endif %}">
+                
+                {% if is_liked_by_user %}
+                    <span class="like-text">Unlike</span>
+                {% else %}
+                    <span class="like-text">Like</span>
+                {% endif %} 
+                
+                ({{ post.likes.count }} likes)
+            </a>
+        </div>
+    </div>
+    
+    <div class="card comment-section-card">
+        <h2 class="section-title">Comments ({{ post.comments.count }})</h2>
+
+        <form method="POST" action="{% url 'accounts:add_comment' post.id %}">
+            {% csrf_token %}
+            <div class="form-group comment-form-group">
+                
+                {{ comment_form.text }} 
+                <button type="submit" class="btn btn-primary btn-sm comment-submit-btn">Post Comment</button>
+            </div>
+            {% for error in comment_form.text.errors %}
+                <div class="field-error">{{ error }}</div>
+            {% endfor %}
+        </form>
+
+        <div class="comment-list">
+            {% if post.comments.all %}
+                {% for comment in post.comments.all %}
+                    <div class="comment-item">
+                        
+                        {% if comment.user_id %}
+                            <a href="{% url 'accounts:profile_with_username' comment.user.username %}" class="comment-avatar-link">
+                                {% if comment.user.profile.avatar %}
+                                    <img src="{{ comment.user.profile.avatar.url }}" alt="{{ comment.user.username }}'s avatar" class="comment-avatar">
+                                {% else %}
+                                    <img src="{% static 'accounts/default-profile.png' %}" alt="Default avatar" class="comment-avatar">
+                                {% endif %}
+                            </a>
+                        {% else %}
+                            <img src="{% static 'accounts/default-profile.png' %}" alt="Deleted User" class="comment-avatar">
+                        {% endif %}
+
+                        <div class="comment-content">
+                            
+                            {% if comment.user_id %}
+                                <a href="{% url 'accounts:profile_with_username' comment.user.username %}" class="comment-username">{{ comment.user.username }}</a>
+                            {% else %}
+                                <span class="comment-username deleted-user-text">Deleted User</span>
+                            {% endif %}
+                            
+                            <p class="comment-text">{{ comment.text }}</p>
+                            
+                            <span class="comment-timestamp">{{ comment.created_at|timesince }} ago</span>
+                            
+                            
+                            {% if comment.user_id and request.user.id == comment.user_id %}
+                                <a href="{% url 'accounts:delete_comment' comment.id %}" class="delete-link">Delete</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="no-comments-message">Be the first to leave a comment!</p>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+
+{% endblock content %}

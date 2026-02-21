@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Musician - {{ musician.username }}{% endblock %}
+
+{% block content %}
+
+<div class="profile-container main-container">
+
+    <div class="profile-card"> 
+        
+        <div class="profile-avatar-wrapper">
+            {% if profile.avatar %}
+                <img src="{{ profile.avatar.url }}" alt="{{ musician.username }} avatar" class="profile-avatar-img">
+            {% else %}
+                <img src="{% static 'accounts/default-profile.png' %}" alt="Default avatar" class="profile-avatar-img">
+            {% endif %}
+        </div>
+
+        <div class="profile-details">
+            
+            <div class="profile-header-row">
+                <h2 class="profile-username">{{ musician.username }}</h2>
+                
+                <div class="profile-actions">
+                    {% if request.user == musician %}
+                        <a href="{% url 'accounts:edit_profile' %}" class="btn btn-secondary btn-edit-profile">Edit Profile</a>
+                    {% else %}
+                        <button 
+                            id="follow-toggle-button" 
+                            data-username="{{ musician.username }}"
+                            class="btn btn-follow 
+                                {% if is_following %}btn-secondary{% else %}btn-primary{% endif %}"
+                        >
+                            {% if is_following %}Unfollow{% else %}Follow{% endif %}
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="profile-counts">
+                <span class="count-item"><strong>{{ total_posts }}</strong> Posts</span>
+                <span class="count-item"><strong id="follower-count">{{ follower_count }}</strong> Followers</span>
+                <span class="count-item"><strong>{{ following_count }}</strong> Following</span>
+            </div>
+
+            <h3 class="profile-full-name">{{ profile.full_name }}</h3>
+            <p class="profile-instrument">{{ profile.instrument }}</p>
+            <p class="profile-bio-text">{{ profile.bio }}</p>
+        </div>
+    </div>
+    
+    <hr class="profile-section-divider">
+
+    {% if posts %}
+        <div class="post-grid">
+            {% for post in posts %}
+            <a href="{% url 'accounts:view_post' post.id %}" class="post-grid-item">
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                {% else %}
+                    <div class="text-post-placeholder">
+                        <p class="text-post-title"><strong>{{ post.title|default:"Text Post"|truncatechars:30 }}</strong></p>
+                        <p class="text-post-caption">{{ post.caption|truncatechars:50 }}</p>
+                    </div>
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="no-posts-message">
+            {{ musician.username }} hasn't created any posts yet.
+        </p>
+    {% endif %}
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const followButton = document.getElementById('follow-toggle-button');
+    const followerCountElement = document.getElementById('follower-count');
+
+    if (followButton) {
+        followButton.addEventListener('click', async function() {
+            
+            const username = this.getAttribute('data-username');
+            const url = "{% url 'accounts:follow_toggle' 'DUMMY_USERNAME' %}".replace('DUMMY_USERNAME', username);
+            
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value; 
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({}) 
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    if (data.is_following) {
+                        followButton.textContent = 'Unfollow';
+                        followButton.classList.remove('btn-primary');
+                        followButton.classList.add('btn-secondary');
+                    } else {
+                        followButton.textContent = 'Follow';
+                        followButton.classList.remove('btn-secondary');
+                        followButton.classList.add('btn-primary');
+                    }
+                    
+                    if (followerCountElement) {
+                        followerCountElement.textContent = data.follower_count;
+                    }
+
+                } else {
+                    console.error('Follow toggle failed:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Network error:', error);
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Create Post - Resonate{% endblock %}
+
+{% block content %}
+<div class="create-post-container form-container main-container">
+    
+    <div class="form-card">
+        <h2 class="page-title">Create a New Post</h2>
+        <p class="page-subtitle">Share your latest music, collaboration ideas, or general updates with the community.</p>
+
+        <form method="POST" enctype="multipart/form-data" class="post-create-form">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+                <div class="non-field-errors field-error">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <small class="field-instruction">{{ field.help_text }}</small>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <div class="form-buttons">
+                <button type="submit" class="btn btn-primary">Create Post</button>
+                <a href="{% url 'accounts:profile_with_username' user.username %}" class="btn btn-secondary">Back to Profile</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

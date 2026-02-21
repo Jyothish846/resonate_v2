@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Resonate Feed{% endblock %}
+
+{% block content %}
+
+<div class="feed-container main-container">
+    <h1 class="page-title">Community Feed 🎶</h1>
+    <p class="page-subtitle">See what musicians are sharing from around the world.</p>
+
+    {% if posts %}
+        {% for post in posts %}
+            <div class="post-card">
+                
+                <div class="post-header">
+                    
+                    {% if post.author %} 
+                        
+                        <a href="{% url 'accounts:profile_with_username' post.author.username %}">
+                            
+                            {% if post.author.profile.avatar %}
+                                <img src="{{ post.author.profile.avatar.url }}" alt="{{ post.author.username }}'s avatar" class="post-avatar">
+                            {% else %}
+                                <img src="{% static 'accounts/default-profile.png' %}" alt="Default avatar" class="post-avatar">
+                            {% endif %}
+                        </a>
+                        <div class="post-meta">
+                            <a href="{% url 'accounts:profile_with_username' post.author.username %}" class="post-username">{{ post.author.username }}</a>
+                            <span class="post-timestamp">{{ post.created_at|timesince }} ago</span>
+                        </div>
+                    
+                    {% else %}
+                       
+                        <img src="{% static 'accounts/default-profile.png' %}" alt="Deleted User" class="post-avatar">
+                        <div class="post-meta">
+                            <span class="post-username deleted-user-text">Deleted User</span>
+                            <span class="post-timestamp">{{ post.created_at|timesince }} ago</span>
+                        </div>
+                    {% endif %}
+                </div>
+
+                
+                <a href="{% url 'accounts:view_post' post.id %}" class="post-content-link">
+                    
+                    <h3 class="post-main-title">{{ post.title }}</h3>
+                    
+                    {% if post.image %}
+                        <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-image">
+                    {% endif %}
+
+                    <p class="post-caption">{{ post.description }}</p>
+                    
+                </a>
+               
+
+                <div class="post-actions">
+                    
+                </div>
+
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="no-posts no-results">
+            It's quiet in here! Follow more musicians or create your first post.
+        </p>
+    {% endif %}
+
+</div>
+
+{% endblock %}

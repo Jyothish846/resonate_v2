@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Edit Profile - {{ user.username }} - Resonate{% endblock %}
+
+{% block content %}
+
+<div class="edit-profile-container form-container main-container">
+
+    <div class="edit-profile-card">
+        <h2 class="page-title">Edit Your Profile</h2>
+        <p class="page-subtitle">Update your bio, instrument, and profile picture.</p>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+                <div class="non-field-errors field-error">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="form-group current-avatar-group">
+                <label>Current Profile Picture</label>
+                <div class="current-avatar-wrapper">
+                    {% if user.profile.avatar %} 
+                        <img src="{{ user.profile.avatar.url }}" 
+                             alt="{{ user.username }}'s current avatar" class="current-avatar-img">
+                    {% else %}
+                        <img src="{% static 'accounts/default-profile.png' %}" 
+                             alt="Default avatar" class="current-avatar-img">
+                    {% endif %}
+                </div>
+                <small class="field-instruction">Upload a new file below to change it.</small>
+            </div>
+            <hr class="form-section-divider">
+
+            <div class="form-group">
+                <label for="id_username">Username</label>
+                <input type="text" id="id_username" value="{{ user.username }}" readonly class="form-input">
+                <small class="field-instruction">Username cannot be changed.</small>
+            </div>
+
+            {% for field in form.visible_fields %}
+                {% if field.name == 'bio' or field.name == 'instrument' or field.name == 'location' or field.name == 'avatar' %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <small class="field-instruction">{{ field.help_text }}</small>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <div class="field-error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            <div class="form-buttons">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="{% url 'accounts:profile_with_username' user.username %}" class="btn btn-secondary">Cancel</a>
+            </div>
+            
+        </form>
+        
+        <div class="form-footer-actions">
+            <a href="{% url 'accounts:password_change' %}" class="change-password-link">Change Password</a>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

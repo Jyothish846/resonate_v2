@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome to Resonate{% endblock %}
+
+{% block extra_head %}
+    <style>
+        .home-container {
+            background-color: #ffffff; 
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); 
+            text-align: center;
+        }
+        
+        .home-container h1 {
+            font-size: 2.2em;
+            color: #7B68EE;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .home-container h1 .music-note-hero { 
+            margin-left: 10px;
+            font-size: 0.9em;
+            color: #7B68EE;
+        }
+
+        .home-container p {
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 20px;
+            text-align: center; 
+        }
+        
+        .home-container .sub-message {
+            font-style: italic;
+            font-size: 0.95em;
+            color: #666;
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .welcome-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .welcome-buttons .btn {
+            padding: 12px 25px;
+            font-size: 1.1em;
+            text-decoration: none;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: none;
+            font-weight: 600;
+        }
+
+        .welcome-buttons .btn-primary:hover { background-color: #6a5acb; transform: translateY(-1px); }
+        .welcome-buttons .btn-secondary:hover { background-color: #d0d0d0; transform: translateY(-1px); }
+
+        @media (max-width: 600px) {
+            .home-container { padding: 30px; }
+            .welcome-buttons { flex-direction: column; gap: 10px; }
+            .welcome-buttons .btn { width: 100%; padding: 10px 15px; }
+        }
+    </style>
+{% endblock extra_head %}
+
+{% block content %}
+    <div class="content-wrapper">
+        <div class="home-container">
+            <h1>Welcome to Resonate <span class="music-note-hero">🎵</span></h1>
+            
+            <p>Your hub for connecting with musicians and sharing your latest creations.</p>
+            <p style="font-weight: bold; color: #333; margin-top: 0;">Ready to get started?</p> 
+
+            <div class="welcome-buttons">
+                <a href="{% url 'accounts:login' %}" class="btn btn-primary">Login</a>
+                <a href="{% url 'accounts:signup' %}" class="btn btn-secondary">Sign Up</a>
+            </div>
+
+            <p class="sub-message">If you're new, check out the Feed to see the latest community posts!</p>
+        </div>
+    </div>
+{% endblock content %}

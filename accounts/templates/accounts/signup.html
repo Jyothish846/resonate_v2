@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Sign Up - Resonate{% endblock %}
+
+{% block content %}
+
+<div class="signup-container form-container main-container">
+
+    <div class="signup-card">
+        <h2 class="page-title">Create Your Account</h2>
+        <p class="page-subtitle">Join Resonate to connect with musicians and explore posts.</p>
+
+        <form method="POST" class="signup-form">
+            {% csrf_token %}
+
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                    <small class="field-instruction">{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <div class="field-error">{{ error }}</div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+
+            <div class="form-buttons">
+                <button type="submit" class="btn btn-primary">Sign Up</button>
+                <a href="{% url 'accounts:login' %}" class="btn btn-secondary">Login</a>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script>
+    
+    document.querySelectorAll('.signup-form input, .signup-form select').forEach(input => {
+        const instruction = input.parentElement.querySelector('.field-instruction');
+        if (instruction) {
+            instruction.style.display = 'none';
+            input.addEventListener('focus', () => instruction.style.display = 'block');
+            input.addEventListener('blur', () => instruction.style.display = 'none');
+        }
+    });
+</script>
+
+{% endblock %}

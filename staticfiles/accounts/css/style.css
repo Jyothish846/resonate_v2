@@ -1,0 +1,181 @@
+/* ================= BODY & FONT ================= */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #141e30, #243b55);
+    color: #fff;
+}
+
+/* ================= NAVBAR ================= */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(15px);
+    border-radius: 0 0 15px 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-left a,
+.nav-right a {
+    margin-right: 20px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.nav-left a:hover,
+.nav-right a:hover {
+    color: #00c6ff;
+    transform: translateY(-2px);
+}
+
+/* Branding */
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: #fff;
+}
+
+.brand-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* ================= BUTTONS ================= */
+.btn {
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 25px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 12px rgba(0,198,255,0.5);
+}
+
+.btn-primary { background: linear-gradient(135deg, #00c6ff, #0072ff); }
+.btn-secondary { background: rgba(255,255,255,0.2); color: #fff; }
+.btn-secondary:hover { background: rgba(255,255,255,0.3); }
+
+/* ================= PROFILE BANNER ================= */
+.profile-banner {
+    display: flex;
+    gap: 25px;
+    padding: 25px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 20px;
+    max-width: 900px;
+    margin: 40px auto;
+    color: #fff;
+    align-items: center;
+}
+
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255,255,255,0.2);
+    flex-shrink: 0;
+}
+
+.profile-details {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.profile-username {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.bio {
+    font-size: 1rem;
+    color: #ccc;
+}
+
+.profile-stats {
+    display: flex;
+    gap: 20px;
+    font-weight: 500;
+}
+
+.profile-stats div {
+    background: rgba(255,255,255,0.05);
+    padding: 8px 12px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.profile-actions {
+    margin-top: 10px;
+}
+
+/* ================= POSTS GRID ================= */
+.posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    max-width: 900px;
+    margin: 30px auto 50px auto;
+}
+
+.post-card {
+    width: 100%;
+    padding-top: 100%;
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.05);
+}
+
+.post-card img {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.post-card p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    font-size: 0.9rem;
+    word-break: break-word;
+    text-align: center;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+    .profile-banner {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .profile-avatar { width: 100px; height: 100px; }
+    .profile-username { font-size: 1.5rem; }
+    .bio { font-size: 0.95rem; }
+    .posts-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+}
